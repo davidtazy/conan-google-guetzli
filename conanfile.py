@@ -36,7 +36,7 @@ class GoogleguetzliConan(ConanFile):
             with tools.chdir(self._source_subfolder):
                 msbuild.build("guetzli.sln")
         else:
-            with tools.chdir(self.build_folder):
+            with tools.chdir(self._source_subfolder):
                 print("cwd = {}".format(os.getcwd()))
                 with tools.environment_append({"PKG_CONFIG_PATH": self.build_folder}):
                     self.run("make")
@@ -45,10 +45,9 @@ class GoogleguetzliConan(ConanFile):
         if self.on_windows:
             self.copy("{}/bin/{}/Release/guetzli.exe".format(self._source_subfolder, self.settings.arch),
                       dst="bin", keep_path=False)
-            self.copy("{}/LICENSE".format(self._source_subfolder, dst="licenses"))
         else:
-            self.copy("bin/Release/guetzli", dst="bin", keep_path=False)
-            self.copy("LICENSE", dst="licenses")
+            self.copy("{}/bin/Release/guetzli".format(self._source_subfolder), dst="bin", keep_path=False)
+        self.copy("{}/LICENSE".format(self._source_subfolder), dst="licenses")
 
     def package_info(self):
         bindir = os.path.join(self.package_folder, "bin")
