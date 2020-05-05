@@ -9,10 +9,13 @@ class GoogleguetzliTestConan(ConanFile):
     
     def test(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        bees_path  = os.path.join(dir_path,"bees.png")
+        bees_path  = os.path.join(dir_path, "bees.png")
         print("{}".format(dir_path))
         if not tools.cross_building(self.settings):
-            self.run("guetzli --quality 84 {} bees.jpg".format(bees_path),run_environment=True)
+            app = "guetzli"
+            if self.settings.os == "Windows":
+                app += ".exe"
+            self.run("{} --quality 84 {} bees.jpg".format(app,bees_path), run_environment=True)
             
 
    
